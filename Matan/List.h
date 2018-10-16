@@ -1,10 +1,3 @@
-//
-//  List.h
-//  CIS22C_Lab2
-//
-//  Created by Matan Broner on 10/10/18.
-//  Copyright © 2018 Matan Broner. All rights reserved.
-//
 
 #ifndef List_h
 #define List_h
@@ -14,31 +7,107 @@ template<typename T>
 class List
 {
 private:
-    int count;
-    Node<T>* head;
-    Node<T>* tail;
+    int count; // amount of nodes in the list
+    Node<T>* head; // pointer to the first node in the list
+    Node<T>* tail; // not used in the Linked List, but can be used in potential queue inheritance structures
     
 public:
-    List<T>();
-    int getCount();
+    List<T>(); // constructor
+    int getCount(); // returns count
     
+    /* This method accepts an integer based index and a data value of type T. It adds a new node to the given list with the given index and data value. (if possible)
+     Pre: integer index, T type data
+     Post: Given list + new node at given index with data value
+     Return: none
+     */
     void addAtPos(int index, T data);
-    T deleteAnywhere(int index);
     
+    /* This method removes a node at a given integer based index and returns the data that was held in said node. (if possible)
+     Pre: integer index
+     Post: Given list - node at given index
+     Return: data held at list index given (or NULL)
+     */
+    T deleteAnywhere(int index); // removes a node based on an integer based index
+    
+    /* This method take an integer based index and fetches the data held at index in the list (if possible)
+     Pre: none
+     Post: none
+     Return: data member of list at index given (or NULL)
+     */
     T getDataAtIndex(int i);
-    int searchByData(T data);
     
+    /* This method accepts a data value of type T and parses the given list to find the pointer address at which it is held, and returns the address if found. If not found, it returns NULL.
+     Pre: T type data
+     Post: none
+     Return: Node pointer at which data is held in list or NULL if not found
+     */
+    Node<T>* searchByData(T data);
+    
+    /* This method parses the entire list if head is not NULL, and deletes each node pointer. It then sets head to NULL to result in an empty list object.
+     Pre: none
+     Post: emptied list
+     Return: none
+     */
     void emptyListContents();
+    
+    /* This method parses through the list object if head is not set to NULL (ie. empty list) and rearranges the DATA values of each node to result in an ascending order of node data. It does NOT exchange pointers, rather only swaps data.
+     Pre: none
+     Post: List data is sorted in ascending order
+     Return: none
+     */
     void sortListAcsending();
+    
+    /* This method parses through the list object if head is not set to NULL (ie. empty list) and rearranges the DATA values of each node to result in an descending order of node data. It does NOT exchange pointers, rather only swaps data.
+     Pre: none
+     Post: List data is sorted in descending order
+     Return: none
+     */
     void sortListDecsending();
     
+    /* This method accepts a data value of type T and creates a new node with this data. It then sets this node as the head node of the list appropriately.
+     Pre: T data
+     Post: Given list + new head node
+     Return: none
+     */
+    
+    /* This method is used to add nodes into a linked list which is meant to be sorted. The nodes are added in ascending order by value of their data.
+     Pre: T data
+     Post: List + new node in correctly ordered spot
+     Return: none
+     */
+    void add(T data);
+    
     void addAtHead(T data);
+    
+    /* This method accepts a data value of type T and creates a new node with this data. It then sets this node as the last node of the list appropriately, only if the list has one or more nodes already. Otherwise it calls the addAtHead method with the given data.
+     Pre: T data
+     Post: Given list + new tail node (or head node if list has 0 nodes)
+     Return: none
+     */
     void addAtTail(T data);
     
+    /* This method removes the first (head) node in the list if one exists, and returns the data that was held in this node.
+     Pre: none
+     Post: List - head node (if possible)
+     Return: T data held at head node or NULL
+     */
     T deleteHead();
+    
+    /* This method removes the last (tail) node in the list if one exists, and returns the data that was held in this node.
+     Pre: none
+     Post: List - tail node (if possible)
+     Return: T data held at head node or NULL
+     */
     T deleteTail();
     
+    /* This method parses the given list if it has one or more nodes, and prints the data held in each node
+     Pre: none
+     Post: none
+     Return: none
+     */
     void printList();
+    
+    ~List<T>(); // deletes all nodes and then the object
 };
 
 template<typename T>
@@ -56,16 +125,44 @@ int List<T>::getCount()
 }
 
 template<typename T>
+void List<T>::add(T data)
+{
+    Node<T>* newNode = new Node<T>;
+    newNode->setData(data);
+    Node<T>* temp = this->head;
+    if (this->count >= 1)
+    {
+        while (temp->getNext() != nullptr)
+        {
+            if (temp->getNext()->getData() <= data)
+                temp = temp->getNext();
+            else break;
+        }
+        if (this->count == 1 && data < temp->getData())
+        {
+            newNode->setNext(temp);
+            this->head = newNode;
+        }
+        else{
+            newNode->setNext(temp->getNext());
+            temp->setNext(newNode);
+        }
+        count++;
+    }
+    else this->addAtHead(data);
+}
+
+template<typename T>
 void List<T>::addAtPos(int index, T data)
 {
-    if (index >= this->getCount() || index < 0)
+    if (index >= this->getCount() || index < 0) // if index given is not within acceptable range
     {
-        if (index == this->getCount())
+        if (index == this->getCount()) // if user is attempting to add node at one after last node in list
         {
-            this->addAtTail(data);
+            this->addAtTail(data); // method calls the method to add the node at the tail
         }
         else
-        std::cout<< "Attempting to access unavailable index!" << std::endl;
+        std::cout<< "Attempting to access unavailable index!" << std::endl; // error message
         return;
     }
    
@@ -77,19 +174,19 @@ void List<T>::addAtPos(int index, T data)
     
     else
     {
-        Node<T>* newNode = new Node<T>;
+        Node<T>* newNode = new Node<T>; // creates new node with given data which will serve as the new node in the list
         newNode->setData(data);
         
-        Node<T>* tempPtr = this->head;
-        while(index > 2)
+        Node<T>* tempPtr = this->head; // retrieve address of first node in the list
+        while(index > 2) // to best add new node, tempPtr should point to the node before the pos. at which we want to add
         {
-            tempPtr = tempPtr->getNext();
+            tempPtr = tempPtr->getNext(); // parse to the next node
             index--;
         }
-        if (tempPtr->getNext() != NULL)
+        if (tempPtr->getNext() != NULL) // backup check to ensure that the new node won't point to NULL
         {
-            newNode->setNext(tempPtr->getNext());
-            tempPtr->setNext(newNode);
+            newNode->setNext(tempPtr->getNext()); // new node will replace tempPtr in the chain
+            tempPtr->setNext(newNode); // tempPtr will now point to new node instead
             this->count++;
         }
 
@@ -99,96 +196,98 @@ void List<T>::addAtPos(int index, T data)
 template<typename T>
 void List<T>::addAtHead(T data)
 {
-    Node<T>* newNode = new Node<T>;
+    Node<T>* newNode = new Node<T>; // creates new node pointer with given data to serve as new head node
     newNode->setData(data);
    
-    newNode->setNext(this->head);
-    this->head = newNode;
+    newNode->setNext(this->head); // new node will replace the current head in the chain
+    this->head = newNode; // new node is now acting as the list head
     this->count++;
 }
 
 template<typename T>
 void List<T>::addAtTail(T data)
 {
-    Node<T>* newNode = new Node<T>;
+    Node<T>* newNode = new Node<T>; // creates new node pointer with given data to serve as new head node
     newNode->setData(data);
-    newNode->setNext(NULL);
+    newNode->setNext(NULL); // new node will act as the tail, hence its next node should be NULL
 
-    if (this->head != NULL)
+    if (this->head != NULL) // if there is at least one node in the list already
     {
-        Node<T>* tempPtr = head;
-        while(tempPtr->getNext() != NULL)
+        Node<T>* tempPtr = head; // retrieve address of current head
+        while(tempPtr->getNext() != NULL) // parse until we reach tail (tail's next pointer is NULL)
         {
-            tempPtr = tempPtr->getNext();
+            tempPtr = tempPtr->getNext(); // parse to next node
         }
-        tempPtr->setNext(newNode);
+        tempPtr->setNext(newNode); // adds new node to right after the last node
     }
-    else this->head = newNode;
+    else this->head = newNode; // if no nodes present, sets the new node as he head (essentially making it both the head and the tail)
     this->count++;
 }
 
 template<typename T>
 T List<T>::deleteHead()
 {
-    if (this->head)
+    if (this->head) // if a head is present
     {
         Node<T>* tempPtr = this->head;
-        this->head = tempPtr->getNext();
+        T tempData = tempPtr->getData(); // holds the data member held in the head node
+        this->head = tempPtr->getNext(); // sets hea pointer to one after the current head
         this->count--;
-        return tempPtr->getData();
+        delete tempPtr; // deletes head
+        return tempData;
     }
-    else return NULL;
+    else return NULL; // if no head present, program cannot fetch it and returns NULL
 }
 
 template<typename T>
 T List<T>::deleteTail()
 {
-    if (this->head && this->count > 1)
+    if (this->head && this->count > 1) // if a head + 1 or more nodes list is given
     {
         Node<T>* curr = this->head;
         Node<T>* prev = NULL;
-        while(curr->getNext())
+        while(curr->getNext()) // while the list tail is not reached
         {
-            prev = curr;
-            curr = curr->getNext();
+            prev = curr; // holds the current pointer address
+            curr = curr->getNext(); // parses the current pointer to the next one
         }
-        prev->setNext(NULL);
+        prev->setNext(NULL); // prev pointer is now the tail
         this->count--;
-        T temp = curr->getData();
-        curr = NULL;
+        T temp = curr->getData(); // holds data member of former tail
+        delete curr; // deletes former tail
         return temp;
     }
-    else {return this->deleteHead();}
-    std::cout << "List empty, no tail to delete. Return NULL" << std::endl;
+    else {return this->deleteHead();} // if 1 pointer list given, deleteHead is more appropriate
+    std::cout << "List empty, no tail to delete. Return NULL" << std::endl; // error for empty list given
     return NULL;
 }
 
 template<typename T>
 T List<T>::deleteAnywhere(int index)
 {
-    if (index < 0 || index > this->getCount() - 1)
+    if (index < 0 || index > this->getCount() - 1) // if index given is not in acceptable range
     {
         std::cout << "Attempting to access invalid data point! Return NULL" << std::endl;
         return NULL;
     }
-    if (index == 0)
+    if (index == 0) // if head is called to be deleted
         return this->deleteHead();
-    else if (index >= this->getCount() - 1)
+    else if (index >= this->getCount() - 1) // if tail is called to be deleted
         return this->deleteTail();
     else
     {
         Node<T>* curr = this->head;
         Node<T>* prev = NULL;
-        while(index > 0)
+        while(index > 0) // parses the list, holding the current pointer and the one before it
         {
             prev = curr;
             curr = curr->getNext();
-            index--;
+            index--; // deincrements the iterator
         }
-        prev->setNext(curr->getNext());
+        prev->setNext(curr->getNext()); // sets the previous node's next pointer to the one after the one to be deleted
         this->count--;
-        T temp = curr->getData();
-        curr = NULL;
+        T temp = curr->getData(); // holds data member of deleted node
+        delete curr; // deletes the pointer
         return temp;
     }
 }
@@ -197,52 +296,63 @@ template<typename T>
 T List<T>::getDataAtIndex(int i)
 {
     Node<T>* tempPtr = this->head;
-    while(tempPtr != NULL)
+    while(tempPtr != NULL) // ensures tempPtr does not move past list
     {
         if (i == 0)
             return tempPtr->getData();
         i--;
-        tempPtr = tempPtr->getNext();
+        tempPtr = tempPtr->getNext(); // moves to next node pointer
     }
     
-    std::cout << "Attempting to access data point past list end! Return NULL" << std::endl;
+    std::cout << "Attempting to access data point past list end! Return NULL" << std::endl; // error message for invalid index
     return NULL;
 }
 
 template<typename T>
-int List<T>::searchByData(T data)
+Node<T>* List<T>::searchByData(T data)
 {
-    int count = 0;
-    Node<T>* tempPtr = this->head;
-    while(tempPtr->getNext())
+    Node<T>* tempPtr = this->head; // pointer to be used to find data in list
+    while(tempPtr->getNext()) // parses through the list
     {
-        if (tempPtr->getData() == data)
-            return count;
-        count++;
-        tempPtr = tempPtr->getNext();
+        if (tempPtr->getData() == data) // if data member at current node is the one being searched for
+            return tempPtr;
+        tempPtr = tempPtr->getNext(); // moves to next node
     }
-    std::cout << "Data not contained in list, returning index 0" << std::endl;
-    return 0;
+    std::cout << "Data not contained in list, returning head" << std::endl; // if not found, returns head address
+    return this->head;
 }
 
 template<typename T>
 void List<T>::emptyListContents()
 {
-    this->head = NULL;
+    if (this->head)
+    {
+        Node<T>* tempPtr = this->head;
+        while (tempPtr->getNext()) // parses through the list
+        {
+            Node<T>* ptr = tempPtr->getNext(); // holds the next pointer
+            delete tempPtr; // deletes current pointer
+            tempPtr = ptr; // moves to next pointer
+        }
+    }
+    this->head = NULL; // head set to NULL acts as new list
 }
 
 template<typename T>
 void List<T>::sortListAcsending()
 {
-    for (Node<T> *index = this->head; index->getNext() != NULL; index = index->getNext())
+    if (this->head != NULL)
     {
-        for (Node<T> *selection = index->getNext(); selection != NULL; selection = selection->getNext())
+        for (Node<T> *index = this->head; index->getNext() != NULL; index = index->getNext())
         {
-            if (index->getData() > selection->getData())
+            for (Node<T> *selection = index->getNext(); selection != NULL; selection = selection->getNext())
             {
-                T tempData = index->getData();
-                index->setData(selection->getData());
-                selection->setData(tempData);
+                if (index->getData() > selection->getData())
+                {
+                    T tempData = index->getData();
+                    index->setData(selection->getData());
+                    selection->setData(tempData);
+                }
             }
         }
     }
@@ -252,15 +362,18 @@ void List<T>::sortListAcsending()
 template<typename T>
 void List<T>::sortListDecsending()
 {
-    for (Node<T> *index = this->head; index->getNext() != NULL; index = index->getNext())
+    if (this->head != NULL)
     {
-        for (Node<T> *selection = index->getNext(); selection != NULL; selection = selection->getNext())
+        for (Node<T> *index = this->head; index->getNext() != NULL; index = index->getNext())
         {
-            if (index->getData() < selection->getData())
+            for (Node<T> *selection = index->getNext(); selection != NULL; selection = selection->getNext())
             {
-                T tempData = index->getData();
-                index->setData(selection->getData());
-                selection->setData(tempData);
+                if (index->getData() < selection->getData())
+                {
+                    T tempData = index->getData();
+                    index->setData(selection->getData());
+                    selection->setData(tempData);
+                }
             }
         }
     }
@@ -269,15 +382,24 @@ void List<T>::sortListDecsending()
 template <typename T>
 void List<T>::printList()
 {
-    Node<T>* readPtr = this->head;
-    while(readPtr != NULL)
+    if (this->head != NULL) // if list has at least one pointer
     {
-        std::cout << readPtr->getData();
-        if (readPtr->getNext() != NULL)
-            std::cout << " ";
-        readPtr = readPtr->getNext();
+        Node<T>* readPtr = this->head;
+        while(readPtr) // while the node not set past tail
+        {
+            std::cout << readPtr->getData(); // prints the data member
+            if (readPtr->getNext() != NULL) // if current node not tail
+                std::cout << " "; // prints a space buffer
+            readPtr = readPtr->getNext(); // moves to next pointer
+        }
     }
     std::cout << std::endl;
+}
+
+template <typename T>
+List<T>::~List<T>()
+{
+    this->emptyListContents(); // deletes all the nodes in the list
 }
 
 #endif /* List_h */

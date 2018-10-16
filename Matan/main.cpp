@@ -1,10 +1,3 @@
-//
-//  main.cpp
-//  CIS22C_Lab2
-//
-//  Created by Matan Broner on 10/10/18.
-//  Copyright © 2018 Matan Broner. All rights reserved.
-//
 
 #include <iostream>
 #include "Stack.h"
@@ -15,7 +8,7 @@ int main(int argc, const char * argv[]) {
     cout << "_____________________________________________" << endl;
     cout << "Welcome to the CIS 22C List and Stack Program" << endl;
     cout << "---------------------------------------------" << endl << endl;
-    
+
     cout << "Creating integer Linked-List with data [3, 56, 76, 12, 14, 2, 43]" << endl;
     List<int> intList;
     intList.addAtHead(3);
@@ -28,27 +21,27 @@ int main(int argc, const char * argv[]) {
     cout << "Current integer list printed:\n";
     intList.printList();
     cout << endl;
-    
+
     cout << "Sorting integer list in ascending order..." << endl;
     intList.sortListAcsending();
     cout << "Current integer list printed:\n";
     intList.printList();
     cout << endl;
-    
+
     cout << "Sorting integer list in descending order..." << endl;
     intList.sortListDecsending();
     cout << "Current integer list printed:\n";
     intList.printList();
     cout << endl;
-    
+
     cout << "Attempting to add value 7 at index -3 in the integer list..." << endl;
     intList.addAtPos(-3, 7);
     cout << endl;
-    
+
     cout << "Attempting to add value 10 at index 23 in the integer list..." << endl;
     intList.addAtPos(23, 10);
     cout << endl;
-    
+
     cout << "Now displaying the ability to use an array of Stacks in order to hold student test scores..." << endl;
     Stack<double> testScores[2];
     double testScoreArray[2][3] =
@@ -69,7 +62,7 @@ int main(int argc, const char * argv[]) {
         }
         cout << endl;
     }
-    
+
     cout << "Sorting Jimmy and Hannah's tests scores in descending order..." << endl;
     testScores[0].sortStackDescending();
     testScores[1].sortStackDescending();
@@ -77,7 +70,7 @@ int main(int argc, const char * argv[]) {
     cout << "Jimmy's dropped test grade: " << testScores[0].pop() << endl;
     cout << "Hannah's dropped test grade: " << testScores[1].pop() << endl;
     cout << endl;
-    
+
     cout << "Test scores for remaining tests for students Jimmy and Hannah after drop:" << endl;
     for (int i = 0; i < 2; i++)
     {
@@ -89,7 +82,8 @@ int main(int argc, const char * argv[]) {
         }
         cout << endl;
     }
-    
+    cout << endl << endl;
+
     cout << "Now displaying the ability to hold ADT's inside your Stack ADT, using the Dollar class..." << endl;
     Stack<Dollar> dollarStack;
     cout << "Adding Dollar values of: 12.56, 43.6567, 54.21, 43.21, and a default Dollar object" << endl;
@@ -106,6 +100,17 @@ int main(int argc, const char * argv[]) {
         cout << dollarStack.pop();
         cout << "Current stack count: " << dollarStack.stackCount() << endl << endl;
     }
-
+    
+    cout << "Now using the general 'add' method to display a pre-sorted string linked-list:" << endl;
+    List<string> strList;
+    strList.add("A");
+    strList.add("hello");
+    strList.add("good");
+    strList.add("T");
+    strList.add("C++");
+    strList.add("javaScript");
+    strList.add("HoMeWork");
+    strList.printList();
     return 0;
 }
+

@@ -1,10 +1,3 @@
-//
-//  Stack.h
-//  CIS22C_Lab2
-//
-//  Created by Matan Broner on 10/12/18.
-//  Copyright © 2018 Matan Broner. All rights reserved.
-//
 
 #ifndef Stack_h
 #define Stack_h
@@ -14,51 +7,65 @@ template <typename T>
 class Stack : private List<T>
 {
 public:
-    void push(T data);
-    T pop();
+    void push(T data); // adds new node to tail
+    T pop(); // removes node from tail
     
+    /* This method returns true is the stack has no nodes, and false otherwise
+     Pre: none
+     Post: none
+     Return: true or false
+     */
     bool isEmpty();
-    void sortStackAscending();
-    void sortStackDescending();
-    int stackCount();
+    
+    void sortStackAscending(); // uses the List object's sort ascending order function
+    void sortStackDescending(); // uses the List object's sort descending order function
+    int stackCount(); // returns the number of nodes held in the stack
+    
+    ~Stack<T>(); // deletes all nodes in stack and then object itself
 };
 
 template <typename T>
 void Stack<T>::push(T data)
 {
-    this->addAtTail(data);
+    this->addAtTail(data); // adds new node at tail using List method
 }
 
 template <typename T>
 T Stack<T>::pop()
 {
-    return this->deleteTail();
+    return this->deleteTail(); // deletes the tail node using List method and returns the data member of deleted node
 }
 
 template <typename T>
 bool Stack<T>::isEmpty()
 {
-    if (this->getCount() > 0)
+    if (this->getCount() > 0) // if 1 or more nodes in stack
         return false;
-    else return true;
+    else return true; // stack is empty
 }
 
 template <typename T>
 void Stack<T>::sortStackAscending()
 {
-    this->sortListAcsending();
+    this->sortListAcsending(); // uses the List method to sort nodes in ascending order
 }
 
 template <typename T>
 void Stack<T>::sortStackDescending()
 {
-    this->sortListDecsending();
+    this->sortListDecsending(); // uses the List method to sort nodes in descending order
 }
 
 template<typename T>
 int Stack<T>::stackCount()
 {
-    return this->getCount();
+    return this->getCount(); // calls List method to retrive number of nodes in stack
+}
+
+template <typename T>
+Stack<T>::~Stack<T>()
+{
+    this->emptyListContents();
 }
 
 #endif /* Stack_h */
