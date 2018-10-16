@@ -127,29 +127,29 @@ int List<T>::getCount()
 template<typename T>
 void List<T>::add(T data)
 {
-    Node<T>* newNode = new Node<T>;
+    Node<T>* newNode = new Node<T>; // new node to add to the list
     newNode->setData(data);
     Node<T>* temp = this->head;
-    if (this->count >= 1)
+    if (this->count >= 1) // if at least a head exists in the list
     {
-        while (temp->getNext() != nullptr)
+        while (temp->getNext() != nullptr) // while we are at before the tail
         {
-            if (temp->getNext()->getData() <= data)
-                temp = temp->getNext();
-            else break;
+            if (temp->getNext()->getData() <= data) // if the data we are pointing to is less than the added data
+                temp = temp->getNext(); // move to next node
+            else break; // if not stop parsing
         }
-        if (this->count == 1 && data < temp->getData())
+        if (this->count == 1 && data < temp->getData()) // if only a head node is present and its data is greater than the data we are adding
         {
-            newNode->setNext(temp);
+            newNode->setNext(temp); // switch their positions
             this->head = newNode;
         }
         else{
-            newNode->setNext(temp->getNext());
+            newNode->setNext(temp->getNext()); // place the new node in the found spot
             temp->setNext(newNode);
         }
         count++;
     }
-    else this->addAtHead(data);
+    else this->addAtHead(data); // if not set the new node as the head (includes count++)
 }
 
 template<typename T>
