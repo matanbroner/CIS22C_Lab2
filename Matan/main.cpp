@@ -1,4 +1,10 @@
 
+/*
+ Lab 2(a): Displaying Linked-List and Stack Behaviours
+ Partners: Matan Broner & Timo Bitterli
+ Matan rating for Timo: 0
+ */
+
 #include <iostream>
 #include "Stack.h"
 #include "DerivedCurrencies.h"
@@ -111,6 +117,7 @@ int main(int argc, const char * argv[]) {
     strList.add("javaScript");
     strList.add("HoMeWork");
     strList.printList();
+    system("pause");
     return 0;
 }
 
