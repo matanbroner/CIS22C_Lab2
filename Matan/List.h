@@ -162,7 +162,7 @@ void List<T>::addAtPos(int index, T data)
             this->addAtTail(data); // method calls the method to add the node at the tail
         }
         else
-        std::cout<< "Attempting to access unavailable index!" << std::endl; // error message
+            throw std::out_of_range("invalid index"); // error message
         return;
     }
    
@@ -234,11 +234,11 @@ T List<T>::deleteHead()
         this->head = tempPtr->getNext(); // sets hea pointer to one after the current head
         this->count--;
         delete tempPtr; // deletes head
-        return tempData;
         if (this->count == 0)
             this->head = nullptr;
+        return tempData;
     }
-    else return NULL; // if no head present, program cannot fetch it and returns NULL
+    throw std::out_of_range("invalid deletion"); // if no head present, program cannot fetch it and returns NULL
 }
 
 template<typename T>
@@ -260,8 +260,7 @@ T List<T>::deleteTail()
         return temp;
     }
     else {return this->deleteHead();} // if 1 pointer list given, deleteHead is more appropriate
-    std::cout << "List empty, no tail to delete. Return NULL" << std::endl; // error for empty list given
-    return NULL;
+    throw std::out_of_range("invalid deletion");
 }
 
 template<typename T>
@@ -269,8 +268,7 @@ T List<T>::deleteAnywhere(int index)
 {
     if (index < 0 || index > this->getCount() - 1) // if index given is not in acceptable range
     {
-        std::cout << "Attempting to access invalid data point! Return NULL" << std::endl;
-        return nullptr;
+        throw std::out_of_range("invalid deletion");
     }
     if (index == 0) // if head is called to be deleted
         return this->deleteHead();
@@ -305,9 +303,7 @@ T List<T>::getDataAtIndex(int i)
         i--;
         tempPtr = tempPtr->getNext(); // moves to next node pointer
     }
-    
-    std::cout << "Attempting to access data point past list end! Return NULL" << std::endl; // error message for invalid index
-    return nullptr;
+    throw std::out_of_range("invalid index");
 }
 
 template<typename T>
